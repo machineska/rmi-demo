@@ -1,26 +1,77 @@
-version: "3.8"
 services:
-  xmlrpc:
-    image: python:3.11-slim
-    working_dir: /app
+  # 1. gRPC Service
+  grpc:
+    build: .
+    command: python grpc-demo/server.py
+    ports:
+      - "50051:50051"
     volumes:
       - ./:/app
-    command: sh -c "pip install -r requirements.txt && python xmlrpc-demo/server.py"
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # 2. XML-RPC Service
+  xmlrpc:
+    build: .
+    command: python xmlrpc-demo/server.py
     ports:
       - "9000:9000"
-  rpyc:
-    image: python:3.11-slim
-    working_dir: /app
     volumes:
       - ./:/app
-    command: sh -c "pip install -r requirements.txt && python rpyc-demo/server.py"
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # 3. RPyC Service
+  rpyc:
+    build: .
+    command: python rpyc-demo/server.py
     ports:
       - "18861:18861"
-  zerorpc:
-    image: python:3.11-slim
-    working_dir: /app
     volumes:
       - ./:/app
-    command: sh -c "pip install -r requirements.txt && python zerorpc-demo/server.py"
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # 4. ZeroRPC Service
+  zerorpc:
+    build: .
+    command: python zerorpc-demo/server.py
     ports:
       - "4242:4242"
+    volumes:
+      - ./:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # 5a. Pyro5 Name Server
+  pyro5-ns:
+    build: .
+    command: python -m Pyro5.nameserver --host 0.0.0.0
+    ports:
+      - "9090:9090"
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  # 5b. Pyro5 Server (Calculator)
+  pyro5-server:
+    build: .
+    command: python pyrofive/server.py
+    depends_on:
+      - pyro5-ns
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYRO_NS_HOST=pyro5-ns
+    volumes:
+      - ./:/app
+
+  # 6. GraphQL (Django)
+  graphql:
+    build: .
+    # Jalankan migrasi dulu, baru jalankan server di 0.0.0.0:8000
+    command: sh -c "python graphql_demo/manage.py migrate && python graphql_demo/manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    environment:
+      - PYTHONUNBUFFERED=1

@@ -1,5 +1,5 @@
 Pyro5>=5.14,<6
-rpyc>=5.4,<6
+rpyc>=5.3,<6
 zerorpc>=0.6,<0.7
 grpcio>=1.62,<2
 grpcio-tools>=1.62,<2
