@@ -1,7 +1,0 @@
-Pyro5
-rpyc
-zerorpc
-grpcio
-grpcio-tools
-django
-graphene-django

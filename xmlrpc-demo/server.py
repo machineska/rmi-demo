@@ -1,3 +1,4 @@
+import logging
 from xmlrpc.server import SimpleXMLRPCServer
 
 
@@ -14,15 +15,15 @@ def subtract(a, b):
 
 # Set up the server
 def main():
-    server = SimpleXMLRPCServer(("localhost", 9000))
-    print("XML-RPC Server is running on port 9000...")
-
-    # Register functions
-    server.register_function(add, "add")
-    server.register_function(subtract, "subtract")
-
-    # Run the server
-    server.serve_forever()
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    try:
+        server = SimpleXMLRPCServer(("localhost", 9000))
+        logging.info("XML-RPC Server is running on port 9000...")
+        server.register_function(add, "add")
+        server.register_function(subtract, "subtract")
+        server.serve_forever()
+    except Exception as e:
+        logging.exception("XML-RPC server error: %s", e)
 
 
 if __name__ == "__main__":

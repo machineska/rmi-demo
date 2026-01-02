@@ -171,3 +171,7 @@ Desktop.ini
 
 # Project specific
 *.sqlite3
+
+# Trae
+.trae/
+

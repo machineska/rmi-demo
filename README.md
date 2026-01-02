@@ -17,6 +17,8 @@ This project demonstrates various Remote Method Invocation (RMI) and Remote Proc
   - [5. Pyro5 Demo](#5-pyro5-demo)
   - [6. GraphQL Demo](#6-graphql-demo)
 - [Running the Demos](#running-the-demos)
+- [One-Command Run](#one-command-run)
+- [Troubleshooting](#troubleshooting)
 - [Comparison of Technologies](#comparison-of-technologies)
 
 ## 🎯 Overview
@@ -316,6 +318,50 @@ mutation {
     }
   }
 }
+```
+
+## 🟢 One-Command Run
+
+Gunakan skrip terpadu:
+
+```bash
+python run_demo.py grpc server    # terminal 1
+python run_demo.py grpc client    # terminal 2
+
+python run_demo.py xmlrpc server  # terminal 1
+python run_demo.py xmlrpc client  # terminal 2
+
+python run_demo.py pyro5 nameserver  # terminal 1
+python run_demo.py pyro5 server      # terminal 2
+python run_demo.py pyro5 client      # terminal 3
+
+python run_demo.py graphql           # menjalankan server Django
+```
+
+## 🧰 Troubleshooting
+
+- Dependencies belum terpasang: jalankan `pip install -r requirements.txt`.
+- Port sudah dipakai: ubah port di file server terkait atau hentikan proses lain.
+- Pyro5 perlu nameserver: jalankan `python -m Pyro5.nameserver` terlebih dahulu.
+- gRPC stub tidak cocok: regenerasi dengan `python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. calculator.proto` di folder `grpc-demo`.
+- ZeroRPC gagal menghubungkan: pastikan server berjalan dan alamat `tcp://127.0.0.1:4242` dapat diakses.
+
+## 🐳 Docker Compose (opsional)
+
+Menjalankan beberapa server sekaligus:
+
+```bash
+docker compose up -d
+```
+
+Layanan yang aktif: XML-RPC (9000), RPyC (18861), ZeroRPC (4242).
+
+## 🧪 Benchmark (opsional)
+
+Uji latensi sederhana:
+
+```bash
+python benchmarks/benchmark.py --iterations 200 --target all
 ```
 
 ## ⚖️ Comparison of Technologies

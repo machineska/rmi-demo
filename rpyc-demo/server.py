@@ -1,13 +1,14 @@
+import logging
 import rpyc
 
 
 # Define a service class
 class CalculatorService(rpyc.Service):
     def on_connect(self, conn):
-        print("Client connected.")
+        logging.info("Client connected.")
 
     def on_disconnect(self, conn):
-        print("Client disconnected.")
+        logging.info("Client disconnected.")
 
     # Expose methods remotely
     def exposed_add(self, a, b):
@@ -19,7 +20,10 @@ class CalculatorService(rpyc.Service):
 # Start the server
 if __name__ == "__main__":
     from rpyc.utils.server import ThreadedServer
-
-    server = ThreadedServer(CalculatorService, port=18861)
-    print("Calculator server is running on port 18861.")
-    server.start()
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    try:
+        server = ThreadedServer(CalculatorService, port=18861)
+        logging.info("Calculator server is running on port 18861.")
+        server.start()
+    except Exception as e:
+        logging.exception("RPyC server error: %s", e)

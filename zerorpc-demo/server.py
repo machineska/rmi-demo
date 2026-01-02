@@ -1,3 +1,4 @@
+import logging
 import zerorpc
 
 
@@ -13,10 +14,14 @@ class Calculator:
 
 # Start the server
 def main():
-    server = zerorpc.Server(Calculator())  # Bind the Calculator class to the server
-    server.bind("tcp://0.0.0.0:4242")  # Listen on port 4242
-    print("Calculator server running on tcp://0.0.0.0:4242")
-    server.run()
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    try:
+        server = zerorpc.Server(Calculator())
+        server.bind("tcp://0.0.0.0:4242")
+        logging.info("Calculator server running on tcp://0.0.0.0:4242")
+        server.run()
+    except Exception as e:
+        logging.exception("ZeroRPC server error: %s", e)
 
 if __name__ == "__main__":
     main()

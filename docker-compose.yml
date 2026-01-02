@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  xmlrpc:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: sh -c "pip install -r requirements.txt && python xmlrpc-demo/server.py"
+    ports:
+      - "9000:9000"
+  rpyc:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: sh -c "pip install -r requirements.txt && python rpyc-demo/server.py"
+    ports:
+      - "18861:18861"
+  zerorpc:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: sh -c "pip install -r requirements.txt && python zerorpc-demo/server.py"
+    ports:
+      - "4242:4242"

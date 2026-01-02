@@ -1,3 +1,4 @@
+import logging
 import Pyro5.api
 
 
@@ -13,16 +14,17 @@ class Calculator:
 
 # Start the Pyro server
 def main():
-    daemon = Pyro5.api.Daemon()  # Start Pyro daemon
-    ns = Pyro5.api.locate_ns()  # Locate the Pyro name server
-
-    uri = daemon.register(Calculator)  # Register the Calculator class
-    ns.register("example.calculator", uri)  # Register the object in the name server
-
-    print("Calculator server is ready.")
-    daemon.requestLoop()  # Start the event loop
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    try:
+        daemon = Pyro5.api.Daemon()
+        ns = Pyro5.api.locate_ns()
+        uri = daemon.register(Calculator)
+        ns.register("example.calculator", uri)
+        logging.info("Calculator server is ready.")
+        daemon.requestLoop()
+    except Exception as e:
+        logging.exception("Pyro5 server error: %s", e)
 
 
 if __name__ == "__main__":
-    # run `python -m Pyro5.nameserver` then start this server
     main()
